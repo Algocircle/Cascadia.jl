@@ -390,6 +390,7 @@ function parsePseudoclassSelector(p::Parser) #-> Selector
 	p.i += 1
 	name = parseIdentifier(p)
 	name = lowercase(name)
+
 	if name == "not" || name =="has" || name == "haschild"
 		if !consumeParenthesis(p)
 			parseError(p, expectedParenthesis)
@@ -475,9 +476,9 @@ function parsePseudoclassSelector(p::Parser) #-> Selector
 	elseif name == "only-of-type"
 		return onlyChildSelector(true)
 	elseif name == "input"
-		return inputSelector
+		return inputSelector()
 	elseif name == "empty"
-		return emptyElementSelector
+		return emptyElementSelector()
 	end
 	parseError(p, "unknown pseudoclass : $name")
 end
@@ -646,7 +647,7 @@ function parseSimpleSelectorSequence(p::Parser) #-> Selector
 		end
 	end
 	if result == nothing
-		result = (n) -> return true;  #TODO type of n ??
+		result = trueSelector()
 	end
 	return result
 end

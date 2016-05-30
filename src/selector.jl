@@ -4,10 +4,10 @@
 
 #// A Selector is a function which tells whether a node matches or not.
 type Selector
-    theFunc::Function
+    f::Function
 end
 
-call(s::Selector, n::HTMLNode) = s.theFunc(n)
+call(s::Selector, n::HTMLNode) = s.f(n)
 call(s::Selector, n::NullNode) = false
 
 firstChild(n::HTMLElement) = isempty(n.children)?nothing:n.children[1]
@@ -41,12 +41,8 @@ end
 
 #// hasChildMatch returns whether n has any child that matches a.
 function hasChildMatch(n::HTMLNode, a::Selector)
-    c=firstChild(n)
-    while c!=nothing
-        if a(c)
-            return true
-        end
-        c = nextSibling(c)
+    for c = children(n)
+        if a(c); return true; end
     end
     return false
 end
@@ -56,8 +52,9 @@ end
 #// hasDescendantMatch performs a depth-first search of n's descendants,
 #// testing whether any of them match a. It returns true as soon as a match is
 #// found, or false if no match is found.
-function hasDescendantMatch(n::HTMLElement, a::Selector)
-    for c in n.children
+function hasDescendantMatch(n::HTMLNode, a::Selector)
+    for c in children(n)
+        if typeof(c) == HTMLText; return a(c); end
         for cc in postorder(c)
             if a(cc); return true; end
         end
@@ -70,7 +67,7 @@ end
 #// Compile parses a selector and returns, if successful, a Selector object
 #// that can be used to match against html.Node objects.
 
-function Compile(sel::AbstractString) #->Selector
+function Selector(sel::AbstractString) #->Selector
     p=Parser(sel)
     compiled = parseSelectorGroup(p)
     if p.i < length(sel)
@@ -86,14 +83,15 @@ end
 
 #// MatchAll returns a slice of the nodes that match the selector,
 #// from n and its children.
-function MatchAll(s::Selector, n::HTMLNode ) #->HTMLNode[]
+function Base.matchall(s::Selector, n::HTMLNode ) #->HTMLNode[]
     return matchAllInto(s, n, HTMLNode[])
 end
 
 
+
 function matchAllInto(s::Selector, n::HTMLNode, storage::Array)
     for c in preorder(n)
-        if s(n); append(storage, n); end
+        if s(c); push!(storage, c); end
     end
     return storage
 end
@@ -101,12 +99,12 @@ end
 
 
 #// Match returns true if the node matches the selector.
-Match(s::Selector, n::HTMLNode) = s(n)
+Base.match(s::Selector, n::HTMLNode) = s(n)
 
 
 
 #// MatchFirst returns the first node that matches s, from n and its children.
-function MatchFirst(s::Selector, n::HTMLNode)
+function matchFirst(s::Selector, n::HTMLNode)
     for c in preorder(n)
         if s(c); return c; end
     end
@@ -116,7 +114,7 @@ end
 
 
 #// Filter returns the nodes in nodes that match the selector.
-function Filter(s::Selector, nodes::Array)
+function Base.filter{T<:HTMLNode}(s::Selector, nodes::Vector{T})
     result = HTMLNode[]
     for n in nodes
         if s(n); append(result, n); end
@@ -129,7 +127,8 @@ end
 #// typeSelector returns a Selector that matches elements with a given tag name.
 function typeSelector(tg) #->Selector
     tg=lowercase(tg)
-    return Selector() do n::HTMLElement
+    return Selector() do n::HTMLNode
+        if !(typeof(n) <: HTMLElement); return false; end
         lowercase(string(tag(n))) == tg
     end
 end
@@ -143,7 +142,8 @@ end
 #// where the attribute named key satisifes the function f.
 function attributeSelector(f::Function, key::AbstractString) #->bool
     key = lowercase(key)
-    return Selector() do n::HTMLElement
+    return Selector() do n::HTMLNode
+            if !(typeof(n) <: HTMLElement); return false; end
             for (k,v) in attrs(n)
                 if k==key && f(v); return true; end
             end
@@ -178,7 +178,7 @@ end
 function attributeIncludesSelector(key::AbstractString, val::AbstractString)
     return attributeSelector(key) do s
         for y in split(s)
-            return y==val
+            if y==val; return true; end
         end
         return false
     end
@@ -191,7 +191,7 @@ function attributeDashmatchSelector(key::AbstractString, val::AbstractString) #-
     return attributeSelector(key) do s
         if s==val; return true; end
         if length(s) <= length(val); return false; end
-        if s[1:end-1] == val && s[end] == '-'
+        if s[1:length(val)] == val && s[length(val)+1] == '-'
             return true
         end
         return false
@@ -223,7 +223,7 @@ end
 #// attributeSubstringSelector returns a Selector that matches nodes where
 #// the attribute named key contains val.
 function attributeSubstringSelector(key::AbstractString, val::AbstractString) #-> Selector
-    return attributeSelector(key) do
+    return attributeSelector(key) do s
         return contains(s, val)
     end
 end
@@ -298,6 +298,8 @@ function nodeOwnText(n::HTMLNode) #->String
     return takebuf_string(b)
 end
 
+nodeOwnText(n::HTMLText) = n.text
+
 
 
 #// textSubstrSelector returns a selector that matches nodes that
@@ -345,7 +347,7 @@ end
 #// hasChildSelector returns a selector that matches elements
 #// with a child that matches a.
 function hasChildSelector(a::Selector) #->Selector
-    return Selector() do n::HTMLElement
+    return Selector() do n::HTMLNode
         return hasChildMatch(n, a)
     end
 end
@@ -355,7 +357,7 @@ end
 #// hasDescendantSelector returns a selector that matches elements
 #// with any descendant that matches a.
 function hasDescendantSelector(a::Selector) #->Selector
-    return Selector() do n::HTMLElement
+    return Selector() do n::HTMLNode
         return hasDescendantMatch(n, a)
     end
 end
@@ -367,7 +369,7 @@ end
 #// If ofType is true, implements :nth-of-type instead.
 function nthChildSelector(a::Int, b::Int, last::Bool, ofType::Bool) #->Selector
     return Selector() do n::HTMLNode
-        if typeof(n) != HTMLElement ; return false; end
+        if !(typeof(n) <: HTMLElement); return false; end
         parent = n.parent
         if parent == NullNode; return false; end
         i=-1
@@ -406,8 +408,8 @@ end
 #// onlyChildSelector returns a selector that implements :only-child.
 #// If ofType is true, it implements :only-of-type instead.
 function onlyChildSelector(ofType::Bool) #-> Selector
-    return Selector() do x::HTMLNode
-        if typeof(n) != HTMLElement; return false; end
+    return Selector() do n::HTMLNode
+        if !(typeof(n) <: HTMLElement); return false; end
         parent = n.parent
         if parent == nothing  || parent == NullNode; return false; end
         count = 0
@@ -425,26 +427,38 @@ end
 
 
 #// inputSelector is a Selector that matches input, select, textarea and button elements.
-function inputSelector(n::HTMLElement) #-> bool
-    x=tag(n)
+function inputSelector()
+    return Selector() do n
+        return inputSelectorFn(n)
+    end
+end
+
+function inputSelectorFn(n::HTMLElement) #-> bool
+    x=string(tag(n))
     return x=="input" || x=="select" || x=="textarea" || x=="button"
 end
 
-inputSelector(n::HTMLNode) = false
+inputSelectorFn(n::HTMLNode) = false
 
 
 
 #// emptyElementSelector is a Selector that matches empty elements.
-function emptyElementSelector(n::HTMLElement) #-> boolean
+function emptyElementSelector()
+    return Selector() do n
+        return emptyElementSelectorFn(n)
+    end
+end
+
+function emptyElementSelectorFn(n::HTMLElement) #-> boolean
     for c in children(n)
-        if typeof(c) == HTMLElement || typeof(c) == HTMLText
+        if typeof(c) <: HTMLElement || typeof(c) == HTMLText
             return false
         end
     end
     return true
 end
 
-emptyElementSelector(n::HTMLNode) = false
+emptyElementSelectorFn(n::HTMLNode) = false
 
 
 
@@ -456,7 +470,7 @@ function descendantSelector(a::Selector, d::Selector) #-> Selector
             return false
         end
         p = n.parent
-        while p!=nothing || p!=NullNode
+        while p!=nothing && typeof(p) != NullNode
             if a(p)
                 return true
             end
@@ -488,7 +502,7 @@ function siblingSelector(s1::Selector, s2::Selector, adjacent::Bool) #-> Selecto
         if adjacent
             m = prevSibling(n)
             while m!= nothing
-                if typeof(m) == HTMLText || typeof(m) == HTMLComment
+                if typeof(m) == HTMLText #|| typeof(m) == HTMLComment
                     continue
                 end
                 return s1(m)
@@ -505,3 +519,8 @@ function siblingSelector(s1::Selector, s2::Selector, adjacent::Bool) #-> Selecto
         return false
     end
 end
+
+
+
+
+trueSelector() = Selector((n) -> return true)

@@ -10,7 +10,6 @@
     "HTML": "<html><head></head><body></body></html>",
     "Selector": "*",
     "Results": [
-      "",
       "<html>",
       "<head>",
       "<body>"

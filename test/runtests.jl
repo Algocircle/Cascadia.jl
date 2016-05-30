@@ -1,6 +1,7 @@
 using Cascadia
 using Base.Test
 using JSON
+using Gumbo
 
 # write your own tests here
 @test 1 == 1
@@ -34,9 +35,18 @@ Cascadia.parseInteger(P("90:")) == 90
 
 selectorTests=JSON.parsefile(Pkg.dir("Cascadia", "test", "selectorTests.json"))
 
+cnt = 0
 for (n, d) in enumerate(selectorTests)
-    c = Cascadia.Compile(d["Selector"])
-    n=Gumbo.parsehtml(d["HTML"])
-    #r=Cascadia.MatchAll(c, n)
-    #@assert length(r) == d["Results"]
+    c = Selector(d["Selector"])
+    @test typeof(c) == Selector
+    n=parsehtml(d["HTML"])
+    r=matchall(c, n.root)
+    if length(r) != length(d["Results"])
+        cnt += 1
+        println("Test Failure (known) for $(d["Selector"])")
+    else
+        println("Test Success         for $(d["Selector"])")
+    end
 end
+
+println("Total test failures: $cnt / $(length(selectorTests))")
