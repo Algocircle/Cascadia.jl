@@ -213,7 +213,7 @@ function skipWhitespace(p::Parser) #->boolean
 			if startswith(p.s[p.i:end], "/*")
 				ends,endl = search(p.s, "*/", i+length("/*"))
 				if endl != -1
-					i += endl
+					i = endl+1
 					continue
 				end
 			end
@@ -258,7 +258,7 @@ end
 
 
 #// parseTypeSelector parses a type selector (one that matches by tag name).
-function parserTypeSelector(p::Parser) #->Selector
+function parseTypeSelector(p::Parser) #->Selector
 	tag = parseIdentifier(p)
 	return typeSelector(tag)
 end
@@ -270,13 +270,13 @@ function parseIDSelector(p::Parser)
 	if p.i > length(p.s)
 		parseError(p, "expected class selector (.class), found EOF instead")
 	end
-	if p.s[p.i] != '.'
+	if p.s[p.i] != '#'
 		parseError(p, "expected id selector (#id), found '$(p.s[p.i])' instead")
 	end
 	p.i += 1
 	id  = parseName(p)
 
-	return attributeEqualsSelector("id", class)
+	return attributeEqualsSelector("id", id)
 end
 
 
@@ -300,7 +300,7 @@ end
 
 #// parseAttributeSelector parses a selector that matches by attribute value.
 function parseAttributeSelector(p) #-> Selector
-	if p.i > len(p.s)
+	if p.i > length(p.s)
 		parseError(p, "expected attribute selector ([attribute]), found EOF instead")
 	end
 	if p.s[p.i] != '['
@@ -310,7 +310,7 @@ function parseAttributeSelector(p) #-> Selector
 	skipWhitespace(p)
 	key = parseIdentifier(p)
 	skipWhitespace(p)
-	if p.i > len(p.s)
+	if p.i > length(p.s)
 		parseError(p, "unexpected EOF in attribute selector")
 	end
 	if p.s[p.i] == ']'
@@ -320,7 +320,7 @@ function parseAttributeSelector(p) #-> Selector
 	if p.i+2 > length(p.s)
 		parseError(p, "unexpected EOF in attribute selector")
 	end
-	op = p.s[p.i : p.i+2]
+	op = p.s[p.i : p.i+1]
 	if op[1] == '='
 		op = "="
 	elseif op[2] != '='
@@ -345,11 +345,11 @@ function parseAttributeSelector(p) #-> Selector
 	end
 
 	skipWhitespace(p)
-	if p.i > len(p.s)
+	if p.i > length(p.s)
 		parseError(p, "unexpected EOF in attribute selector")
 	end
 	if p.s[p.i] != ']'
-		error("expected ']', found '$(p.s[p.i])' instead" )
+		parseError(p, "expected ']', found '$(p.s[p.i])' instead" )
 	end
 	p.i += 1
 
@@ -381,7 +381,6 @@ const unmatchedParenthesis = "unmatched '('"
 
 #// parsePseudoclassSelector parses a pseudoclass selector like :not(p).
 function parsePseudoclassSelector(p::Parser) #-> Selector
-
 	if p.i > length(p.s)
 		parseError(p, "expected pseudoclass selector (:pseudoclass), found EOF instead")
 	end
@@ -390,28 +389,28 @@ function parsePseudoclassSelector(p::Parser) #-> Selector
 	end
 	p.i += 1
 	name = parseIdentifier(p)
-	name = toLowerASCII(name)
+	name = lowercase(name)
 	if name == "not" || name =="has" || name == "haschild"
 		if !consumeParenthesis(p)
-			error(expectedParenthesis)
+			parseError(p, expectedParenthesis)
 		end
 		sel = parseSelectorGroup(p)
 		if !consumeClosingParenthesis(p)
-			error(expectedClosingParenthesis)
+			parseError(p, expectedClosingParenthesis)
 		end
 		if name == "not"
 			return negatedSelector(sel)
 		elseif name == "has"
 			return hasDescendantSelector(sel)
 		elseif name == "haschild"
-			hasChildSelector(sel)
+			return hasChildSelector(sel)
 		end
 	elseif  name =="contains" || name == "containsown"
-		if p.consumeParenthesis(p)
-			error(expectedParenthesis)
+		if !consumeParenthesis(p)
+			parseError(p, expectedParenthesis)
 		end
 		if p.i > length(p.s)
-			error(unmatchedParenthesis)
+			parseError(p, unmatchedParenthesis)
 		end
 		val = ""
 		if p.s[p.i] ==  '\'' || p.s[p.i] ==  '"'
@@ -426,7 +425,7 @@ function parsePseudoclassSelector(p::Parser) #-> Selector
 			parseError(p, "unexpected EOF in pseudo selector")
 		end
 		if !consumeClosingParenthesis(p)
-			error(expectedClosingParenthesis)
+			parseError(p, expectedClosingParenthesis)
 		end
 
 		if  name ==  "contains"
@@ -436,7 +435,7 @@ function parsePseudoclassSelector(p::Parser) #-> Selector
 		end
 	elseif name == "matches" || name == "matchesown"
 		if !consumeParenthesis(p)
-			error(expectedParenthesis)
+			parseError(p, expectedParenthesis)
 		end
 		rx  = parseRegex(p)
 
@@ -444,7 +443,7 @@ function parsePseudoclassSelector(p::Parser) #-> Selector
 			parseError(p, "unexpected EOF in pseudo selector")
 		end
 		if !consumeClosingParenthesis(p)
-			error(expectedClosingParenthesis)
+			parseError(p, expectedClosingParenthesis)
 		end
 
 		if name == "matches"
@@ -454,11 +453,11 @@ function parsePseudoclassSelector(p::Parser) #-> Selector
 		end
 	elseif name == "nth-child" || name == "nth-last-child" || name == "nth-of-type" || name == "nth-last-of-type"
 		if !consumeParenthesis(p)
-			error(expectedParenthesis)
+			parseError(p, expectedParenthesis)
 		end
 		a, b = parseNth(p)
 		if !consumeClosingParenthesis(p)
-			error(expectedClosingParenthesis)
+			parseError(p, expectedClosingParenthesis)
 		end
 		return nthChildSelector(a, b,
 				name == "nth-last-child" || name == "nth-last-of-type",
@@ -480,7 +479,6 @@ function parsePseudoclassSelector(p::Parser) #-> Selector
 	elseif name == "empty"
 		return emptyElementSelector
 	end
-	return nil, fmt.Errorf("unknown pseudoclass :%s", name)
 	parseError(p, "unknown pseudoclass : $name")
 end
 
@@ -523,7 +521,7 @@ function parseNth(p::Parser) # -> (a,b)::(Int, Int)
 		@goto readN
 	elseif c=='o'||c=='O'||c=='e'||c=='E'
 		id = parseName(p)
-		id = toLowerASCII(id)
+		id = lowercase(id)
 		if id == "odd"
 			return 2, 1
 		elseif id =="even"
@@ -631,13 +629,13 @@ function parseSimpleSelectorSequence(p::Parser) #-> Selector
 	while p.i <= length(p.s)
 		c=p.s[p.i]
 		if c == '#'
-			ns  = p.parseIDSelector(p)
+			ns  = parseIDSelector(p)
 		elseif c ==  '.'
-			ns = p.parseClassSelector(p)
+			ns = parseClassSelector(p)
 		elseif c == '['
-			ns = p.parseAttributeSelector(p)
+			ns = parseAttributeSelector(p)
 		elseif c == ':'
-			ns = p.parsePseudoclassSelector(p)
+			ns = parsePseudoclassSelector(p)
 		else
 			break
 		end
@@ -659,7 +657,7 @@ end
 function parseSelector(p::Parser) # -> Selector
 	skipWhitespace(p)
 	result = parseSimpleSelectorSequence(p)
-	while
+	while true
 		if skipWhitespace(p)
 			combinator = ' '
 		end
@@ -675,7 +673,7 @@ function parseSelector(p::Parser) # -> Selector
 			# // These characters can't begin a selector, but they can legally occur after one.
 			return result
 		end
-		if combintor == 0; return; end
+		if combinator == 0; return; end
 		c = parseSimpleSelectorSequence(p)
 
 		if combinator ==  ' '

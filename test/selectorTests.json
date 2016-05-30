@@ -1,0 +1,463 @@
+[
+  {
+    "HTML": "<body><address>This address...</address></body>",
+    "Selector": "address",
+    "Results": [
+      "<address>"
+    ]
+  },
+  {
+    "HTML": "<html><head></head><body></body></html>",
+    "Selector": "*",
+    "Results": [
+      "",
+      "<html>",
+      "<head>",
+      "<body>"
+    ]
+  },
+  {
+    "HTML": "<p id=\"foo\"><p id=\"bar\">",
+    "Selector": "#foo",
+    "Results": [
+      "<p id=\"foo\">"
+    ]
+  },
+  {
+    "HTML": "<ul><li id=\"t1\"><p id=\"t1\">",
+    "Selector": "li#t1",
+    "Results": [
+      "<li id=\"t1\">"
+    ]
+  },
+  {
+    "HTML": "<ol><li id=\"t4\"><li id=\"t44\">",
+    "Selector": "*#t4",
+    "Results": [
+      "<li id=\"t4\">"
+    ]
+  },
+  {
+    "HTML": "<ul><li class=\"t1\"><li class=\"t2\">",
+    "Selector": ".t1",
+    "Results": [
+      "<li class=\"t1\">"
+    ]
+  },
+  {
+    "HTML": "<p class=\"t1 t2\">",
+    "Selector": "p.t1",
+    "Results": [
+      "<p class=\"t1 t2\">"
+    ]
+  },
+  {
+    "HTML": "<div class=\"test\">",
+    "Selector": "div.teST",
+    "Results": []
+  },
+  {
+    "HTML": "<p class=\"t1 t2\">",
+    "Selector": ".t1.fail",
+    "Results": []
+  },
+  {
+    "HTML": "<p class=\"t1 t2\">",
+    "Selector": "p.t1.t2",
+    "Results": [
+      "<p class=\"t1 t2\">"
+    ]
+  },
+  {
+    "HTML": "<p><p title=\"title\">",
+    "Selector": "p[title]",
+    "Results": [
+      "<p title=\"title\">"
+    ]
+  },
+  {
+    "HTML": "<address><address title=\"foo\"><address title=\"bar\">",
+    "Selector": "address[title=\"foo\"]",
+    "Results": [
+      "<address title=\"foo\">"
+    ]
+  },
+  {
+    "HTML": "<p title=\"tot foo bar\">",
+    "Selector": "[    \ttitle        ~=       foo    ]",
+    "Results": [
+      "<p title=\"tot foo bar\">"
+    ]
+  },
+  {
+    "HTML": "<p title=\"hello world\">",
+    "Selector": "[title~=\"hello world\"]",
+    "Results": []
+  },
+  {
+    "HTML": "<p lang=\"en\"><p lang=\"en-gb\"><p lang=\"enough\"><p lang=\"fr-en\">",
+    "Selector": "[lang|=\"en\"]",
+    "Results": [
+      "<p lang=\"en\">",
+      "<p lang=\"en-gb\">"
+    ]
+  },
+  {
+    "HTML": "<p title=\"foobar\"><p title=\"barfoo\">",
+    "Selector": "[title^=\"foo\"]",
+    "Results": [
+      "<p title=\"foobar\">"
+    ]
+  },
+  {
+    "HTML": "<p title=\"foobar\"><p title=\"barfoo\">",
+    "Selector": "[title$=\"bar\"]",
+    "Results": [
+      "<p title=\"foobar\">"
+    ]
+  },
+  {
+    "HTML": "<p title=\"foobarufoo\">",
+    "Selector": "[title*=\"bar\"]",
+    "Results": [
+      "<p title=\"foobarufoo\">"
+    ]
+  },
+  {
+    "HTML": "<p class=\"t1 t2\">",
+    "Selector": ".t1:not(.t2)",
+    "Results": []
+  },
+  {
+    "HTML": "<div class=\"t3\">",
+    "Selector": "div:not(.t1)",
+    "Results": [
+      "<div class=\"t3\">"
+    ]
+  },
+  {
+    "HTML": "<ol><li id=1><li id=2><li id=3></ol>",
+    "Selector": "li:nth-child(odd)",
+    "Results": [
+      "<li id=\"1\">",
+      "<li id=\"3\">"
+    ]
+  },
+  {
+    "HTML": "<ol><li id=1><li id=2><li id=3></ol>",
+    "Selector": "li:nth-child(even)",
+    "Results": [
+      "<li id=\"2\">"
+    ]
+  },
+  {
+    "HTML": "<ol><li id=1><li id=2><li id=3></ol>",
+    "Selector": "li:nth-child(-n+2)",
+    "Results": [
+      "<li id=\"1\">",
+      "<li id=\"2\">"
+    ]
+  },
+  {
+    "HTML": "<ol><li id=1><li id=2><li id=3></ol>",
+    "Selector": "li:nth-child(3n+1)",
+    "Results": [
+      "<li id=\"1\">"
+    ]
+  },
+  {
+    "HTML": "<ol><li id=1><li id=2><li id=3><li id=4></ol>",
+    "Selector": "li:nth-last-child(odd)",
+    "Results": [
+      "<li id=\"2\">",
+      "<li id=\"4\">"
+    ]
+  },
+  {
+    "HTML": "<ol><li id=1><li id=2><li id=3><li id=4></ol>",
+    "Selector": "li:nth-last-child(even)",
+    "Results": [
+      "<li id=\"1\">",
+      "<li id=\"3\">"
+    ]
+  },
+  {
+    "HTML": "<ol><li id=1><li id=2><li id=3><li id=4></ol>",
+    "Selector": "li:nth-last-child(-n+2)",
+    "Results": [
+      "<li id=\"3\">",
+      "<li id=\"4\">"
+    ]
+  },
+  {
+    "HTML": "<ol><li id=1><li id=2><li id=3><li id=4></ol>",
+    "Selector": "li:nth-last-child(3n+1)",
+    "Results": [
+      "<li id=\"1\">",
+      "<li id=\"4\">"
+    ]
+  },
+  {
+    "HTML": "<p>some text <span id=\"1\">and a span</span><span id=\"2\"> and another</span></p>",
+    "Selector": "span:first-child",
+    "Results": [
+      "<span id=\"1\">"
+    ]
+  },
+  {
+    "HTML": "<span>a span</span> and some text",
+    "Selector": "span:last-child",
+    "Results": [
+      "<span>"
+    ]
+  },
+  {
+    "HTML": "<address></address><p id=1><p id=2>",
+    "Selector": "p:nth-of-type(2)",
+    "Results": [
+      "<p id=\"2\">"
+    ]
+  },
+  {
+    "HTML": "<address></address><p id=1><p id=2></p><a>",
+    "Selector": "p:nth-last-of-type(2)",
+    "Results": [
+      "<p id=\"1\">"
+    ]
+  },
+  {
+    "HTML": "<address></address><p id=1><p id=2></p><a>",
+    "Selector": "p:last-of-type",
+    "Results": [
+      "<p id=\"2\">"
+    ]
+  },
+  {
+    "HTML": "<address></address><p id=1><p id=2></p><a>",
+    "Selector": "p:first-of-type",
+    "Results": [
+      "<p id=\"1\">"
+    ]
+  },
+  {
+    "HTML": "<div><p id=\"1\"></p><a></a></div><div><p id=\"2\"></p></div>",
+    "Selector": "p:only-child",
+    "Results": [
+      "<p id=\"2\">"
+    ]
+  },
+  {
+    "HTML": "<div><p id=\"1\"></p><a></a></div><div><p id=\"2\"></p><p id=\"3\"></p></div>",
+    "Selector": "p:only-of-type",
+    "Results": [
+      "<p id=\"1\">"
+    ]
+  },
+  {
+    "HTML": "<p id=\"1\"><!-- --><p id=\"2\">Hello<p id=\"3\"><span>",
+    "Selector": ":empty",
+    "Results": [
+      "<head>",
+      "<p id=\"1\">",
+      "<span>"
+    ]
+  },
+  {
+    "HTML": "<div><p id=\"1\"><table><tr><td><p id=\"2\"></table></div><p id=\"3\">",
+    "Selector": "div p",
+    "Results": [
+      "<p id=\"1\">",
+      "<p id=\"2\">"
+    ]
+  },
+  {
+    "HTML": "<div><p id=\"1\"><table><tr><td><p id=\"2\"></table></div><p id=\"3\">",
+    "Selector": "div table p",
+    "Results": [
+      "<p id=\"2\">"
+    ]
+  },
+  {
+    "HTML": "<div><p id=\"1\"><div><p id=\"2\"></div><table><tr><td><p id=\"3\"></table></div>",
+    "Selector": "div > p",
+    "Results": [
+      "<p id=\"1\">",
+      "<p id=\"2\">"
+    ]
+  },
+  {
+    "HTML": "<p id=\"1\"><p id=\"2\"></p><address></address><p id=\"3\">",
+    "Selector": "p ~ p",
+    "Results": [
+      "<p id=\"2\">",
+      "<p id=\"3\">"
+    ]
+  },
+  {
+    "HTML": "<p id=\"1\"></p>\n\t\t <!--comment-->\n\t\t <p id=\"2\"></p><address></address><p id=\"3\">",
+    "Selector": "p + p",
+    "Results": [
+      "<p id=\"2\">"
+    ]
+  },
+  {
+    "HTML": "<ul><li></li><li></li></ul><p>",
+    "Selector": "li, p",
+    "Results": [
+      "<li>",
+      "<li>",
+      "<p>"
+    ]
+  },
+  {
+    "HTML": "<p id=\"1\"><p id=\"2\"></p><address></address><p id=\"3\">",
+    "Selector": "p +/*This is a comment*/ p",
+    "Results": [
+      "<p id=\"2\">"
+    ]
+  },
+  {
+    "HTML": "<p>Text block that <span>wraps inner text</span> and continues</p>",
+    "Selector": "p:contains(\"that wraps\")",
+    "Results": [
+      "<p>"
+    ]
+  },
+  {
+    "HTML": "<p>Text block that <span>wraps inner text</span> and continues</p>",
+    "Selector": "p:containsOwn(\"that wraps\")",
+    "Results": []
+  },
+  {
+    "HTML": "<p>Text block that <span>wraps inner text</span> and continues</p>",
+    "Selector": ":containsOwn(\"inner\")",
+    "Results": [
+      "<span>"
+    ]
+  },
+  {
+    "HTML": "<p>Text block that <span>wraps inner text</span> and continues</p>",
+    "Selector": "p:containsOwn(\"block\")",
+    "Results": [
+      "<p>"
+    ]
+  },
+  {
+    "HTML": "<div id=\"d1\"><p id=\"p1\"><span>text content</span></p></div><div id=\"d2\"/>",
+    "Selector": "div:has(#p1)",
+    "Results": [
+      "<div id=\"d1\">"
+    ]
+  },
+  {
+    "HTML": "<div id=\"d1\"><p id=\"p1\"><span>contents 1</span></p></div>\n\t\t<div id=\"d2\"><p>contents <em>2</em></p></div>",
+    "Selector": "div:has(:containsOwn(\"2\"))",
+    "Results": [
+      "<div id=\"d2\">"
+    ]
+  },
+  {
+    "HTML": "<body><div id=\"d1\"><p id=\"p1\"><span>contents 1</span></p></div>\n\t\t<div id=\"d2\"><p id=\"p2\">contents <em>2</em></p></div></body>",
+    "Selector": "body :has(:containsOwn(\"2\"))",
+    "Results": [
+      "<div id=\"d2\">",
+      "<p id=\"p2\">"
+    ]
+  },
+  {
+    "HTML": "<body><div id=\"d1\"><p id=\"p1\"><span>contents 1</span></p></div>\n\t\t<div id=\"d2\"><p id=\"p2\">contents <em>2</em></p></div></body>",
+    "Selector": "body :haschild(:containsOwn(\"2\"))",
+    "Results": [
+      "<p id=\"p2\">"
+    ]
+  },
+  {
+    "HTML": "<p id=\"p1\">0123456789</p><p id=\"p2\">abcdef</p><p id=\"p3\">0123ABCD</p>",
+    "Selector": "p:matches([\\d])",
+    "Results": [
+      "<p id=\"p1\">",
+      "<p id=\"p3\">"
+    ]
+  },
+  {
+    "HTML": "<p id=\"p1\">0123456789</p><p id=\"p2\">abcdef</p><p id=\"p3\">0123ABCD</p>",
+    "Selector": "p:matches([a-z])",
+    "Results": [
+      "<p id=\"p2\">"
+    ]
+  },
+  {
+    "HTML": "<p id=\"p1\">0123456789</p><p id=\"p2\">abcdef</p><p id=\"p3\">0123ABCD</p>",
+    "Selector": "p:matches([a-zA-Z])",
+    "Results": [
+      "<p id=\"p2\">",
+      "<p id=\"p3\">"
+    ]
+  },
+  {
+    "HTML": "<p id=\"p1\">0123456789</p><p id=\"p2\">abcdef</p><p id=\"p3\">0123ABCD</p>",
+    "Selector": "p:matches([^\\d])",
+    "Results": [
+      "<p id=\"p2\">",
+      "<p id=\"p3\">"
+    ]
+  },
+  {
+    "HTML": "<p id=\"p1\">0123456789</p><p id=\"p2\">abcdef</p><p id=\"p3\">0123ABCD</p>",
+    "Selector": "p:matches(^(0|a))",
+    "Results": [
+      "<p id=\"p1\">",
+      "<p id=\"p2\">",
+      "<p id=\"p3\">"
+    ]
+  },
+  {
+    "HTML": "<p id=\"p1\">0123456789</p><p id=\"p2\">abcdef</p><p id=\"p3\">0123ABCD</p>",
+    "Selector": "p:matches(^\\d+$)",
+    "Results": [
+      "<p id=\"p1\">"
+    ]
+  },
+  {
+    "HTML": "<p id=\"p1\">0123456789</p><p id=\"p2\">abcdef</p><p id=\"p3\">0123ABCD</p>",
+    "Selector": "p:not(:matches(^\\d+$))",
+    "Results": [
+      "<p id=\"p2\">",
+      "<p id=\"p3\">"
+    ]
+  },
+  {
+    "HTML": "<div><p id=\"p1\">01234<em>567</em>89</p><div>",
+    "Selector": "div :matchesOwn(^\\d+$)",
+    "Results": [
+      "<p id=\"p1\">",
+      "<em>"
+    ]
+  },
+  {
+    "HTML": "<ul>\n\t\t\t<li><a id=\"a1\" href=\"http://www.google.com/finance\"/>\n\t\t\t<li><a id=\"a2\" href=\"http://finance.yahoo.com/\"/>\n\t\t\t<li><a id=\"a2\" href=\"http://finance.untrusted.com/\"/>\n\t\t\t<li><a id=\"a3\" href=\"https://www.google.com/news\"/>\n\t\t\t<li><a id=\"a4\" href=\"http://news.yahoo.com\"/>\n\t\t</ul>",
+    "Selector": "[href#=(fina)]:not([href#=(\\/\\/[^\\/]+untrusted)])",
+    "Results": [
+      "<a id=\"a1\" href=\"http://www.google.com/finance\">",
+      "<a id=\"a2\" href=\"http://finance.yahoo.com/\">"
+    ]
+  },
+  {
+    "HTML": "<ul>\n\t\t\t<li><a id=\"a1\" href=\"http://www.google.com/finance\"/>\n\t\t\t<li><a id=\"a2\" href=\"http://finance.yahoo.com/\"/>\n\t\t\t<li><a id=\"a3\" href=\"https://www.google.com/news\"/>\n\t\t\t<li><a id=\"a4\" href=\"http://news.yahoo.com\"/>\n\t\t</ul>",
+    "Selector": "[href#=(^https:\\/\\/[^\\/]*\\/?news)]",
+    "Results": [
+      "<a id=\"a3\" href=\"https://www.google.com/news\">"
+    ]
+  },
+  {
+    "HTML": "<form>\n\t\t\t<label>Username <input type=\"text\" name=\"username\" /></label>\n\t\t\t<label>Password <input type=\"password\" name=\"password\" /></label>\n\t\t\t<label>Country\n\t\t\t\t<select name=\"country\">\n\t\t\t\t\t<option value=\"ca\">Canada</option>\n\t\t\t\t\t<option value=\"us\">United States</option>\n\t\t\t\t</select>\n\t\t\t</label>\n\t\t\t<label>Bio <textarea name=\"bio\"></textarea></label>\n\t\t\t<button>Sign up</button>\n\t\t</form>",
+    "Selector": ":input",
+    "Results": [
+      "<input type=\"text\" name=\"username\">",
+      "<input type=\"password\" name=\"password\">",
+      "<select name=\"country\">",
+      "<textarea name=\"bio\">",
+      "<button>"
+    ]
+  }
+]

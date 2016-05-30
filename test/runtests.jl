@@ -1,5 +1,6 @@
 using Cascadia
 using Base.Test
+using JSON
 
 # write your own tests here
 @test 1 == 1
@@ -28,3 +29,14 @@ P(x) = Cascadia.Parser(x)
 @test Cascadia.parseString(P("\"a\\\"b\"")) == "a\"b"
 
 Cascadia.parseInteger(P("90:")) == 90
+
+###Selector tests. Load data from file.
+
+selectorTests=JSON.parsefile(Pkg.dir("Cascadia", "test", "selectorTests.json"))
+
+for (n, d) in enumerate(selectorTests)
+    c = Cascadia.Compile(d["Selector"])
+    n=Gumbo.parsehtml(d["HTML"])
+    #r=Cascadia.MatchAll(c, n)
+    #@assert length(r) == d["Results"]
+end
