@@ -298,7 +298,7 @@ function nodeOwnText(n::HTMLNode) #->String
     return takebuf_string(b)
 end
 
-nodeOwnText(n::HTMLText) = n.text
+nodeOwnText(n::HTMLText) = ""
 
 
 

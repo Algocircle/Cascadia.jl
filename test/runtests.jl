@@ -36,14 +36,16 @@ Cascadia.parseInteger(P("90:")) == 90
 selectorTests=JSON.parsefile(Pkg.dir("Cascadia", "test", "selectorTests.json"))
 
 cnt = 0
-for (n, d) in enumerate(selectorTests)
+for (i, d) in enumerate(selectorTests)
     c = Selector(d["Selector"])
     @test typeof(c) == Selector
     n=parsehtml(d["HTML"])
     r=matchall(c, n.root)
-    if length(r) != length(d["Results"])
+    l=length(r)
+    e = length(d["Results"])
+    if l != e
         cnt += 1
-        println("Test Failure (known) for $(d["Selector"])")
+        println("Test Failure (known) for $(d["Selector"]) Expected $e, got $l")
     else
         println("Test Success         for $(d["Selector"])")
     end
