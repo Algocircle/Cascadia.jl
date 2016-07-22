@@ -16,5 +16,5 @@ for q in qs
     votes = nodeText(matchall(Selector(".votes .vote-count-post "), q)[1])
     answered = length(matchall(Selector(".status.answered"), q)) > 0
     href = matchall(Selector(".question-hyperlink"), q)[1].attributes["href"]
-    println("$votes  $answered  http://stackoverflow.com/$href")
+    println("$votes  $answered  http://stackoverflow.com$href")
 end

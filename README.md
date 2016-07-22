@@ -25,7 +25,7 @@ matchall(s, n)
 
 ###Webscraping Example
 
-The primary use case for this library is to enable webscraping, the automatic extraction of information from html pages. As an example, consider the following code, which returns a list of questions that have been tagged with `julialang` on StackOverflow.
+The primary use case for this library is to enable webscraping, the automatic extraction of information from html pages. As an example, consider the following code, which returns a list of questions that have been tagged with `julia-lang` on StackOverflow.
 
 ```julia
 using Cascadia
@@ -43,7 +43,7 @@ for q in qs
     votes = nodeText(matchall(Selector(".votes .vote-count-post "), q)[1])
     answered = length(matchall(Selector(".status.answered"), q)) > 0
     href = matchall(Selector(".question-hyperlink"), q)[1].attributes["href"]
-    println("$votes  $answered  http://stackoverflow.com/$href")    
+    println("$votes  $answered  http://stackoverflow.com$href")    
 end
 ```
 
@@ -52,21 +52,21 @@ This code produces the following output:
 ```
 StackOverflow Julia Questions (votes  answered?  url)
 
-2  true  http://stackoverflow.com//questions/38688095/warning-base-writemime-is-deprecated-julia-0-5-with-jupyter
-2  false  http://stackoverflow.com//questions/38687435/better-way-to-take-lots-of-dot-products
-2  false  http://stackoverflow.com//questions/38686788/how-to-save-plots-with-the-correct-theme-local-font-using-gadfly-in-julia-lang
-1  true  http://stackoverflow.com//questions/38680732/how-to-interpolate-into-a-julia-for-expression
-1  true  http://stackoverflow.com//questions/38676573/whats-the-best-way-to-convert-an-int-to-a-string-in-julia
-4  true  http://stackoverflow.com//questions/38671821/julia-non-destructively-update-immutable-type-variable
+2  true  http://stackoverflow.com/questions/38688095/warning-base-writemime-is-deprecated-julia-0-5-with-jupyter
+2  false  http://stackoverflow.com/questions/38687435/better-way-to-take-lots-of-dot-products
+2  false  http://stackoverflow.com/questions/38686788/how-to-save-plots-with-the-correct-theme-local-font-using-gadfly-in-julia-lang
+1  true  http://stackoverflow.com/questions/38680732/how-to-interpolate-into-a-julia-for-expression
+1  true  http://stackoverflow.com/questions/38676573/whats-the-best-way-to-convert-an-int-to-a-string-in-julia
+4  true  http://stackoverflow.com/questions/38671821/julia-non-destructively-update-immutable-type-variable
 1  false  http://stackoverflow.com//questions/38663113/how-to-use-interpolations-on-sharedarray-in-worker-process-without-each-process
-1  true  http://stackoverflow.com//questions/38647107/how-write-datatype-in-file-with-julia
-3  false  http://stackoverflow.com//questions/38646014/julia-macro-expansion-order
-1  true  http://stackoverflow.com//questions/38644939/how-can-i-get-the-system-process-id-of-a-running-external-command-in-julia
-0  false  http://stackoverflow.com//questions/38638496/julia-serialize-error-when-sending-large-objects-to-workers
-2  false  http://stackoverflow.com//questions/38628089/integrating-juno-ide-with-atom-editor-for-julia-in-windows
-1  false  http://stackoverflow.com//questions/38626999/julia-surface-plot-custom-colors
-2  false  http://stackoverflow.com//questions/38625663/subset-of-dictionary-with-aliases
-2  false  http://stackoverflow.com//questions/38615552/remove-automatically-generated-color-key-in-gadfly-plot
+1  true  http://stackoverflow.com/questions/38647107/how-write-datatype-in-file-with-julia
+3  false  http://stackoverflow.com/questions/38646014/julia-macro-expansion-order
+1  true  http://stackoverflow.com/questions/38644939/how-can-i-get-the-system-process-id-of-a-running-external-command-in-julia
+0  false  http://stackoverflow.com/questions/38638496/julia-serialize-error-when-sending-large-objects-to-workers
+2  false  http://stackoverflow.com/questions/38628089/integrating-juno-ide-with-atom-editor-for-julia-in-windows
+1  false  http://stackoverflow.com/questions/38626999/julia-surface-plot-custom-colors
+2  false  http://stackoverflow.com/questions/38625663/subset-of-dictionary-with-aliases
+2  false  http://stackoverflow.com/questions/38615552/remove-automatically-generated-color-key-in-gadfly-plot
 
 ```
 
