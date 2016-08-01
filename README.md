@@ -22,3 +22,74 @@ matchall(s, n)
 # 1-element Array{Gumbo.HTMLNode,1}:
 #  Gumbo.HTMLElement{:p}
 ```
+
+###Current Status
+
+Most selector types are supported, but a few are still not fully functional. Examples of selectors that currently work, and some that don't  yet, are listed below. 
+
+| Selector | Status        |
+|---------------|----------|
+| `address` | Works         |
+| `*` | Works         |
+| `#foo` | Works         |
+| `li#t1` | Works         |
+| `*#t4` | Works         |
+| `.t1` | Works         |
+| `p.t1` | Works         |
+| `div.teST` | Works         |
+| `.t1.fail` | Works         |
+| `p.t1.t2` | Works         |
+| `p[title]` | Works         |
+| `address[title="foo"]` | Works         |
+| `[      title        ~=       foo    ]` | Works         |
+| `[title~="hello world"]` | Works         |
+| `[lang|="en"]` | Works         |
+| `[title^="foo"]` | Works         |
+| `[title$="bar"]` | Works         |
+| `[title*="bar"]` | Works         |
+| `.t1:not(.t2)` | Works         |
+| `div:not(.t1)` | Works         |
+| `li:nth-child(odd)` | Doesn't Work  |
+| `li:nth-child(even)` | Doesn't Work  |
+| `li:nth-child(-n+2) ` | Doesn't Work  |
+| `li:nth-child(3n+1)` | Doesn't Work  |
+| `li:nth-last-child(odd)` | Doesn't Work  |
+| `li:nth-last-child(even)` | Doesn't Work  |
+| `li:nth-last-child(-n+2)` | Doesn't Work  |
+| `li:nth-last-child(3n+1)` | Doesn't Work  |
+| `span:first-child` | Doesn't Work  |
+| `span:last-child` | Doesn't Work  |
+| `p:nth-of-type(2)` | Doesn't Work  |
+| `p:nth-last-of-type(2)` | Doesn't Work  |
+| `p:last-of-type` | Doesn't Work  |
+| `p:first-of-type` | Doesn't Work  |
+| `p:only-child` | Doesn't Work  |
+| `p:only-of-type` | Doesn't Work  |
+| `:empty` | Works         |
+| `div p` | Works         |
+| `div table p` | Works         |
+| `div > p` | Works         |
+| `p ~ p` | Works         |
+| `p + p` | Works         |
+| `li, p` | Works         |
+| `p +/*This is a comment*/ p` | Works         |
+| `p:contains("that wraps")` | Works         |
+| `p:containsOwn("that wraps")` | Works         |
+| `:containsOwn("inner")` | Works         |
+| `p:containsOwn("block")` | Works         |
+| `div:has(#p1)` | Works         |
+| `div:has(:containsOwn("2"))` | Works         |
+| `body :has(:containsOwn("2"))` | Doesn't Work  |
+| `body :haschild(:containsOwn("2"))` | Works         |
+| `p:matches([\d])` | Works         |
+| `p:matches([a-z])` | Works         |
+| `p:matches([a-zA-Z])` | Works         |
+| `p:matches([^\d])` | Works         |
+| `p:matches(^(0|a))` | Works         |
+| `p:matches(^\d+$)` | Works         |
+| `p:not(:matches(^\d+$))` | Works         |
+| `div :matchesOwn(^\d+$)` | Works         |
+| `[href#=(fina)]:not([href#=(\/\/[^\/]+untrusted)])` | Doesn't Work  |
+| `[href#=(^https:\/\/[^\/]*\/?news)]` | Doesn't Work  |
+| `:input` | Works |
+
