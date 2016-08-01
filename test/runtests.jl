@@ -33,7 +33,7 @@ Cascadia.parseInteger(P("90:")) == 90
 
 ###Selector tests. Load data from file.
 
-selectorTests=JSON.parsefile(Pkg.dir("Cascadia", "test", "selectorTests.json"))
+selectorTests=JSON.parsefile(joinpath(dirname(@__FILE__), "selectorTests.json"))
 
 cnt = 0
 for (n, d) in enumerate(selectorTests)
