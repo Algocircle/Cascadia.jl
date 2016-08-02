@@ -10,7 +10,7 @@ This package depends on the [Gumbo.jl](https://github.com/porterjamesj/Gumbo.jl)
 
 ### Usage
 
-Usage is simple. Use `Gumbo` to parse an HTML string into a document, create a `Selector` from a string, and then use `matchall` to get the nodes in the document that match the selector
+Usage is simple. Use `Gumbo` to parse an HTML string into a document, create a `Selector` from a string, and then use `matchall` to get the nodes in the document that match the selector. The `matchall` function returns an array of elements which match the selector. If no match is found, a zero element array is returned. For unique matches, the array contains one element. Thus, check the length of the array to test whether a selector matches. 
 
 ```julia
 using Cascadia
@@ -18,14 +18,14 @@ using Gumbo
 
 n=parsehtml("<p id=\"foo\"><p id=\"bar\">")
 s=Selector("#foo")
-matchall(s, n)
+matchall(s, n.root)
 # 1-element Array{Gumbo.HTMLNode,1}:
 #  Gumbo.HTMLElement{:p}
 ```
 
 ###Webscraping Example
 
-The primary use case for this library is to enable webscraping, the automatic extraction of information from html pages. As an example, consider the following code, which returns a list of questions that have been tagged with `julia-lang` on StackOverflow.
+The primary use case for this library is to enable webscraping -- the automatic extraction of information from html pages. As an example, consider the following code, which returns a list of questions that have been tagged with `julia-lang` on StackOverflow.
 
 ```julia
 using Cascadia
@@ -70,7 +70,7 @@ StackOverflow Julia Questions (votes  answered?  url)
 
 ```
 
-Note that this returns the question on the first page of the query results. Getting the values from subsequent pages is left as an exercise for the reader.
+Note that this returns the elements on the first page of the query results. Getting the values from subsequent pages is left as an exercise for the reader.
 
 
 ###Current Status
