@@ -76,7 +76,11 @@ function Selector(sel::AbstractString) #->Selector
     return compiled
 end
 
-
+#// A macro wrapper around the Selector function, turns a string literal
+#// into a Selector object
+macro sel_str(sel::AbstractString)
+  Selector(sel)
+end
 
 # // MustCompile is like Compile, but panics instead of returning an error.
 
