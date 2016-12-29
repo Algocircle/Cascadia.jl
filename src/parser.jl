@@ -1,7 +1,7 @@
 
 # a parser for CSS selectors
 type Parser
-	s::UTF8String  # the source text
+	s::String  # the source text
 	i::Int64    # the current position
 end
 
