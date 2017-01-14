@@ -7,8 +7,8 @@ type Selector
     f::Function
 end
 
-call(s::Selector, n::HTMLNode) = s.f(n)
-call(s::Selector, n::NullNode) = false
+(s::Selector)(n::HTMLNode) = s.f(n)
+(s::Selector)(n::NullNode) = false
 
 firstChild(n::HTMLElement) = isempty(n.children)?nothing:n.children[1]
 firstChild(n::HTMLText) = nothing
