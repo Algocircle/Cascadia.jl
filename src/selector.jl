@@ -94,7 +94,7 @@ end
 
 
 function matchAllInto(s::Selector, n::HTMLNode, storage::Array)
-    for c in PreOrderDFS(n)
+    for c in preorder(n)
         if s(c); push!(storage, c); end
     end
     return storage
@@ -109,7 +109,7 @@ Base.match(s::Selector, n::HTMLNode) = s(n)
 
 #// MatchFirst returns the first node that matches s, from n and its children.
 function matchFirst(s::Selector, n::HTMLNode)
-    for c in PreOrderDFS(n)
+    for c in preorder(n)
         if s(c); return c; end
     end
     return nothing
@@ -275,7 +275,7 @@ end
 
 #// writeNodeText writes the text contained in n and its descendants to b.
 function writeNodeText(io, n::HTMLNode)
-    for c in PreOrderDFS(n)
+    for c in preorder(n)
         if typeof(c) == HTMLText
             write(io, c.text)
         end
