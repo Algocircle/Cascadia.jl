@@ -674,7 +674,7 @@ function parseSelector(p::Parser) # -> Selector
 			# // These characters can't begin a selector, but they can legally occur after one.
 			return result
 		end
-		if combinator == 0; return; end
+		if UInt32(combinator) == 0; return; end
 		c = parseSimpleSelectorSequence(p)
 
 		if combinator ==  ' '
