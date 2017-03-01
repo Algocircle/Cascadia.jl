@@ -5,7 +5,7 @@ type Parser
 	i::Int64    # the current position
 end
 
-Parser(s) = Parser(utf8(s), 1)
+Parser(s) = Parser(String(s), 1)
 
 # // parseEscape parses a backslash escape.
 function parseEscape(p::Parser)
