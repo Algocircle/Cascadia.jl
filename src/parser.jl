@@ -54,7 +54,7 @@ hexDigit(c::Char) = '0' <= c && c <= '9' || 'a' <= c && c <= 'f' || 'A' <= c && 
 
 # // nameStart returns whether c can be the first character of an identifier
 # // (not counting an initial hyphen, or an escape sequence).
-nameStart(c::Char) = 'a' <= c && c <= 'z' || 'A' <= c && c <= 'Z' || c == '_' || c > 127
+nameStart(c::Char) = 'a' <= c && c <= 'z' || 'A' <= c && c <= 'Z' || c == '_' || UInt32(c) > 127
 
 
 # // nameChar returns whether c can be a character within an identifier
