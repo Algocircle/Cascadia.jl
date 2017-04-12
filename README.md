@@ -10,7 +10,7 @@ This package depends on the [Gumbo.jl](https://github.com/porterjamesj/Gumbo.jl)
 
 ### Usage
 
-Usage is simple. Use `Gumbo` to parse an HTML string into a document, create a `Selector` from a string, and then use `matchall` to get the nodes in the document that match the selector. The `matchall` function returns an array of elements which match the selector. If no match is found, a zero element array is returned. For unique matches, the array contains one element. Thus, check the length of the array to test whether a selector matches. 
+Usage is simple. Use `Gumbo` to parse an HTML string into a document, create a `Selector` from a string, and then use `matchall` to get the nodes in the document that match the selector. Alternatively, use `sel"<selector string>"` to do the same thing as `Selector`. The `matchall` function returns an array of elements which match the selector. If no match is found, a zero element array is returned. For unique matches, the array contains one element. Thus, check the length of the array to test whether a selector matches.
 
 ```julia
 using Cascadia
@@ -18,7 +18,12 @@ using Gumbo
 
 n=parsehtml("<p id=\"foo\"><p id=\"bar\">")
 s=Selector("#foo")
+sm = sel"#foo"
 matchall(s, n.root)
+# 1-element Array{Gumbo.HTMLNode,1}:
+#  Gumbo.HTMLElement{:p}
+
+matchall(sm, n.root)
 # 1-element Array{Gumbo.HTMLNode,1}:
 #  Gumbo.HTMLElement{:p}
 ```

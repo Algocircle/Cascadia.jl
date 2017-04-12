@@ -1,11 +1,11 @@
 
 # a parser for CSS selectors
 type Parser
-	s::UTF8String  # the source text
+	s::String  # the source text
 	i::Int64    # the current position
 end
 
-Parser(s) = Parser(utf8(s), 1)
+Parser(s) = Parser(String(s), 1)
 
 # // parseEscape parses a backslash escape.
 function parseEscape(p::Parser)
@@ -54,12 +54,12 @@ hexDigit(c::Char) = '0' <= c && c <= '9' || 'a' <= c && c <= 'f' || 'A' <= c && 
 
 # // nameStart returns whether c can be the first character of an identifier
 # // (not counting an initial hyphen, or an escape sequence).
-nameStart(c::Char) = 'a' <= c && c <= 'z' || 'A' <= c && c <= 'Z' || c == '_' || c > 127
+nameStart(c::Char) = 'a' <= c && c <= 'z' || 'A' <= c && c <= 'Z' || c == '_' || UInt32(c) > 127
 
 
 # // nameChar returns whether c can be a character within an identifier
 # // (not counting an escape sequence).
-nameChar(c::Char) = 'a' <= c && c <= 'z' || 'A' <= c && c <= 'Z' || c == '_' || c > 127 ||
+nameChar(c::Char) = 'a' <= c && c <= 'z' || 'A' <= c && c <= 'Z' || c == '_' || UInt32(c) > 127 ||
 	c == '-' || '0' <= c && c <= '9'
 
 
@@ -674,7 +674,7 @@ function parseSelector(p::Parser) # -> Selector
 			# // These characters can't begin a selector, but they can legally occur after one.
 			return result
 		end
-		if combinator == 0; return; end
+		if UInt32(combinator) == 0; return; end
 		c = parseSimpleSelectorSequence(p)
 
 		if combinator ==  ' '

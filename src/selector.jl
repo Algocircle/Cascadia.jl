@@ -7,8 +7,8 @@ type Selector
     f::Function
 end
 
-call(s::Selector, n::HTMLNode) = s.f(n)
-call(s::Selector, n::NullNode) = false
+(s::Selector)(n::HTMLNode) = s.f(n)
+(s::Selector)(n::NullNode) = false
 
 firstChild(n::HTMLElement) = isempty(n.children)?nothing:n.children[1]
 firstChild(n::HTMLText) = nothing
@@ -41,7 +41,7 @@ end
 
 #// hasChildMatch returns whether n has any child that matches a.
 function hasChildMatch(n::HTMLNode, a::Selector)
-    for c = children(n)
+    for c = Gumbo.children(n)
         if a(c); return true; end
     end
     return false
@@ -53,9 +53,9 @@ end
 #// testing whether any of them match a. It returns true as soon as a match is
 #// found, or false if no match is found.
 function hasDescendantMatch(n::HTMLNode, a::Selector)
-    for c in children(n)
+    for c in Gumbo.children(n)
         if typeof(c) == HTMLText; return a(c); end
-        for cc in postorder(c)
+        for cc in PostOrderDFS(c)
             if a(cc); return true; end
         end
     end
@@ -76,7 +76,11 @@ function Selector(sel::AbstractString) #->Selector
     return compiled
 end
 
-
+#// A macro wrapper around the Selector function, turns a string literal
+#// into a Selector object
+macro sel_str(sel::AbstractString)
+  Selector(sel)
+end
 
 # // MustCompile is like Compile, but panics instead of returning an error.
 
@@ -90,7 +94,7 @@ end
 
 
 function matchAllInto(s::Selector, n::HTMLNode, storage::Array)
-    for c in preorder(n)
+    for c in PreOrderDFS(n)
         if s(c); push!(storage, c); end
     end
     return storage
@@ -105,7 +109,7 @@ Base.match(s::Selector, n::HTMLNode) = s(n)
 
 #// MatchFirst returns the first node that matches s, from n and its children.
 function matchFirst(s::Selector, n::HTMLNode)
-    for c in preorder(n)
+    for c in PreOrderDFS(n)
         if s(c); return c; end
     end
     return nothing
@@ -271,7 +275,7 @@ end
 
 #// writeNodeText writes the text contained in n and its descendants to b.
 function writeNodeText(io, n::HTMLNode)
-    for c in preorder(n)
+    for c in PreOrderDFS(n)
         if typeof(c) == HTMLText
             write(io, c.text)
         end
@@ -374,7 +378,7 @@ function nthChildSelector(a::Int, b::Int, last::Bool, ofType::Bool) #->Selector
         if parent == NullNode; return false; end
         i=-1
         count=0
-        for c in children(parent)
+        for c in Gumbo.children(parent)
             if typeof(c) != HTMLElement || (ofType && tag(c) != tag(n))
                 continue
             end
@@ -413,7 +417,7 @@ function onlyChildSelector(ofType::Bool) #-> Selector
         parent = n.parent
         if parent == nothing  || parent == NullNode; return false; end
         count = 0
-        for c in children(parent)
+        for c in Gumbo.children(parent)
             if typeof(c) != HTMLElement || (oftype && tag(c) != tag(n))
                 continue
             end
@@ -450,7 +454,7 @@ function emptyElementSelector()
 end
 
 function emptyElementSelectorFn(n::HTMLElement) #-> boolean
-    for c in children(n)
+    for c in Gumbo.children(n)
         if typeof(c) <: HTMLElement || typeof(c) == HTMLText
             return false
         end
