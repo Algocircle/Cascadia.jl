@@ -50,5 +50,5 @@ for (i, d) in enumerate(selectorTests)
         println("Test Success         for $(d["Selector"])")
     end
 end
-
+@test cnt <= 19
 println("Total test failures: $cnt / $(length(selectorTests))")
