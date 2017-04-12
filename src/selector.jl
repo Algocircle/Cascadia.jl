@@ -41,7 +41,7 @@ end
 
 #// hasChildMatch returns whether n has any child that matches a.
 function hasChildMatch(n::HTMLNode, a::Selector)
-    for c = children(n)
+    for c = Gumbo.children(n)
         if a(c); return true; end
     end
     return false
@@ -53,9 +53,9 @@ end
 #// testing whether any of them match a. It returns true as soon as a match is
 #// found, or false if no match is found.
 function hasDescendantMatch(n::HTMLNode, a::Selector)
-    for c in children(n)
+    for c in Gumbo.children(n)
         if typeof(c) == HTMLText; return a(c); end
-        for cc in postorder(c)
+        for cc in PostOrderDFS(c)
             if a(cc); return true; end
         end
     end
@@ -378,7 +378,7 @@ function nthChildSelector(a::Int, b::Int, last::Bool, ofType::Bool) #->Selector
         if parent == NullNode; return false; end
         i=-1
         count=0
-        for c in children(parent)
+        for c in Gumbo.children(parent)
             if typeof(c) != HTMLElement || (ofType && tag(c) != tag(n))
                 continue
             end
@@ -417,7 +417,7 @@ function onlyChildSelector(ofType::Bool) #-> Selector
         parent = n.parent
         if parent == nothing  || parent == NullNode; return false; end
         count = 0
-        for c in children(parent)
+        for c in Gumbo.children(parent)
             if typeof(c) != HTMLElement || (oftype && tag(c) != tag(n))
                 continue
             end
@@ -454,7 +454,7 @@ function emptyElementSelector()
 end
 
 function emptyElementSelectorFn(n::HTMLElement) #-> boolean
-    for c in children(n)
+    for c in Gumbo.children(n)
         if typeof(c) <: HTMLElement || typeof(c) == HTMLText
             return false
         end
