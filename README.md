@@ -28,7 +28,7 @@ matchall(sm, n.root)
 #  Gumbo.HTMLElement{:p}
 ```
 
-###Webscraping Example
+### Webscraping Example
 
 The primary use case for this library is to enable webscraping -- the automatic extraction of information from html pages. As an example, consider the following code, which returns a list of questions that have been tagged with `julia-lang` on StackOverflow.
 
@@ -78,7 +78,7 @@ StackOverflow Julia Questions (votes  answered?  url)
 Note that this returns the elements on the first page of the query results. Getting the values from subsequent pages is left as an exercise for the reader.
 
 
-###Current Status
+### Current Status
 
 Most selector types are supported, but a few are still not fully functional. Examples of selectors that currently work, and some that don't  yet, are listed below.
 
