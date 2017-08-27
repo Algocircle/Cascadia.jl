@@ -10,7 +10,7 @@ end
 (s::Selector)(n::HTMLNode) = s.f(n)
 (s::Selector)(n::NullNode) = false
 
-firstChild(n::HTMLElement) = isempty(n.children)?nothing:n.children[1]
+firstChild(n::HTMLElement) = isempty(n.children) ? nothing : n.children[1]
 firstChild(n::HTMLText) = nothing
 firstChild(n::HTMLDocument) = n.root
 
