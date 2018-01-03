@@ -38,7 +38,7 @@ using Gumbo
 using Requests
 
 r = get("http://stackoverflow.com/questions/tagged/julia-lang")
-h=parsehtml(bytestring(r.data))
+h = parsehtml(convert(String, r.data))
 
 qs = matchall(Selector(".question-summary"),h.root)
 
@@ -48,7 +48,7 @@ for q in qs
     votes = nodeText(matchall(Selector(".votes .vote-count-post "), q)[1])
     answered = length(matchall(Selector(".status.answered"), q)) > 0
     href = matchall(Selector(".question-hyperlink"), q)[1].attributes["href"]
-    println("$votes  $answered  http://stackoverflow.com$href")    
+    println("$votes  $answered  http://stackoverflow.com$href")
 end
 ```
 
@@ -57,21 +57,30 @@ This code produces the following output:
 ```
 StackOverflow Julia Questions (votes  answered?  url)
 
-2  true  http://stackoverflow.com/questions/38688095/warning-base-writemime-is-deprecated-julia-0-5-with-jupyter
-2  false  http://stackoverflow.com/questions/38687435/better-way-to-take-lots-of-dot-products
-2  false  http://stackoverflow.com/questions/38686788/how-to-save-plots-with-the-correct-theme-local-font-using-gadfly-in-julia-lang
-1  true  http://stackoverflow.com/questions/38680732/how-to-interpolate-into-a-julia-for-expression
-1  true  http://stackoverflow.com/questions/38676573/whats-the-best-way-to-convert-an-int-to-a-string-in-julia
-4  true  http://stackoverflow.com/questions/38671821/julia-non-destructively-update-immutable-type-variable
-1  false  http://stackoverflow.com//questions/38663113/how-to-use-interpolations-on-sharedarray-in-worker-process-without-each-process
-1  true  http://stackoverflow.com/questions/38647107/how-write-datatype-in-file-with-julia
-3  false  http://stackoverflow.com/questions/38646014/julia-macro-expansion-order
-1  true  http://stackoverflow.com/questions/38644939/how-can-i-get-the-system-process-id-of-a-running-external-command-in-julia
-0  false  http://stackoverflow.com/questions/38638496/julia-serialize-error-when-sending-large-objects-to-workers
-2  false  http://stackoverflow.com/questions/38628089/integrating-juno-ide-with-atom-editor-for-julia-in-windows
-1  false  http://stackoverflow.com/questions/38626999/julia-surface-plot-custom-colors
-2  false  http://stackoverflow.com/questions/38625663/subset-of-dictionary-with-aliases
-2  false  http://stackoverflow.com/questions/38615552/remove-automatically-generated-color-key-in-gadfly-plot
+0  false  http://stackoverflow.com/questions/48067945/making-subset-of-julia-dataframe-with-values-greater-than-x
+1  true  http://stackoverflow.com/questions/48060390/initialize-fields-of-user-defined-types-in-arbitrary-order
+1  true  http://stackoverflow.com/questions/48059544/keyword-argument-aliases
+5  false  http://stackoverflow.com/questions/48055583/change-julia-promt-to-include-evalutation-numbers
+1  false  http://stackoverflow.com/questions/48053516/applying-replacement-rules-to-julia-expressions
+1  false  http://stackoverflow.com/questions/48045608/whats-wrong-with-my-euclidean-distance-calculation-julia
+0  false  http://stackoverflow.com/questions/48044567/loading-a-package-in-each-julia-lang-session-avoid-retyping-using-xxx-every-t
+2  false  http://stackoverflow.com/questions/48037732/how-to-save-julia-for-loop-returns-in-an-array-or-dataframe
+3  true  http://stackoverflow.com/questions/48036171/why-does-array-without-produce-so-much-memory-allocation
+1  true  http://stackoverflow.com/questions/48031603/julia-string-interpolation-of-array-element
+
+...
+
+3  false  http://stackoverflow.com/questions/47840667/is-there-a-way-to-tell-which-kernel-a-jupyter-notebook-was-built-with
+0  false  http://stackoverflow.com/questions/47826378/can-julia-capture-the-results-shell-command
+0  false  http://stackoverflow.com/questions/47823695/julia-analog-to-ipython-not-a-notebook-e-g-ijulia
+1  false  http://stackoverflow.com/questions/47822388/julia-comprehension-can-one-index-reference-another
+1  false  http://stackoverflow.com/questions/47822190/display-interaction-with-julia-list-comprehension
+1  false  http://stackoverflow.com/questions/47819748/in-julia-how-do-i-run-an-external-program-and-process-its-output-line-by-line
+2  false  http://stackoverflow.com/questions/47818035/julia-three-dimensional-arrays-performance
+0  false  http://stackoverflow.com/questions/47800014/saving-settings-changes-in-vscode
+0  true  http://stackoverflow.com/questions/47784339/can-broadcast-be-applied-to-subarrays-slices-of-array-in-julia
+2  false  http://stackoverflow.com/questions/47762777/how-to-check-if-a-variable-is-scalar-in-julia
+1  false  http://stackoverflow.com/questions/47762625/tensorflow-jl-output-shape-of-dynamic-rnn
 
 ```
 

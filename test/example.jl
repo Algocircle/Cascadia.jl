@@ -6,7 +6,7 @@ using Gumbo
 using Requests
 
 r = get("http://stackoverflow.com/questions/tagged/julia-lang")
-h=parsehtml(bytestring(r.data))
+h = parsehtml(convert(String, r.data))
 
 qs = matchall(Selector(".question-summary"),h.root)
 
