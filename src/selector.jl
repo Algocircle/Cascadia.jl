@@ -3,7 +3,7 @@
 #// the Selector type, and functions for creating them
 
 #// A Selector is a function which tells whether a node matches or not.
-type Selector
+mutable struct Selector
     f::Function
 end
 
@@ -118,7 +118,7 @@ end
 
 
 #// Filter returns the nodes in nodes that match the selector.
-function Base.filter{T<:HTMLNode}(s::Selector, nodes::Vector{T})
+function Base.filter(s::Selector, nodes::Vector{T}) where T<:HTMLNode
     result = HTMLNode[]
     for n in nodes
         if s(n); append(result, n); end

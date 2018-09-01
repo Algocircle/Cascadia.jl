@@ -1,6 +1,6 @@
 
 # a parser for CSS selectors
-type Parser
+mutable struct Parser
 	s::String  # the source text
 	i::Int64    # the current position
 end
