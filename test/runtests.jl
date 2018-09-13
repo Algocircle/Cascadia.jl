@@ -40,7 +40,7 @@ for (i, d) in enumerate(selectorTests)
     c = Selector(d["Selector"])
     @test typeof(c) == Selector
     n=parsehtml(d["HTML"])
-    r=matchall(c, n.root)
+    r=eachmatch(c, n.root)
     l=length(r)
     e = length(d["Results"])
     if l != e

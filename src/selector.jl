@@ -85,9 +85,9 @@ end
 # // MustCompile is like Compile, but panics instead of returning an error.
 
 
-#// MatchAll returns a slice of the nodes that match the selector,
+#// eachmatch returns a slice of the nodes that match the selector,
 #// from n and its children.
-function Base.matchall(s::Selector, n::HTMLNode ) #->HTMLNode[]
+function Base.eachmatch(s::Selector, n::HTMLNode ) #->HTMLNode[]
     return matchAllInto(s, n, HTMLNode[])
 end
 
