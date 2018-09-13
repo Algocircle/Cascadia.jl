@@ -91,6 +91,12 @@ function Base.eachmatch(s::Selector, n::HTMLNode ) #->HTMLNode[]
     return matchAllInto(s, n, HTMLNode[])
 end
 
+if VERSION >= v"0.7-" && VERSION < v"1.0-"
+function Base.matchall(s::Selector, n::HTMLNode )
+    Base.depwarn("use eachmatch instead of matchall", :matchall)
+    eachmatch(s, n)
+end
+end
 
 
 function matchAllInto(s::Selector, n::HTMLNode, storage::Array)

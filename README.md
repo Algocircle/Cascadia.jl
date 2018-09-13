@@ -10,7 +10,7 @@ This package depends on the [Gumbo.jl](https://github.com/porterjamesj/Gumbo.jl)
 
 ### Usage
 
-Usage is simple. Use `Gumbo` to parse an HTML string into a document, create a `Selector` from a string, and then use `matchall` to get the nodes in the document that match the selector. Alternatively, use `sel"<selector string>"` to do the same thing as `Selector`. The `matchall` function returns an array of elements which match the selector. If no match is found, a zero element array is returned. For unique matches, the array contains one element. Thus, check the length of the array to test whether a selector matches.
+Usage is simple. Use `Gumbo` to parse an HTML string into a document, create a `Selector` from a string, and then use `eachmatch` to get the nodes in the document that match the selector. Alternatively, use `sel"<selector string>"` to do the same thing as `Selector`. The `eachmatch` function returns an array of elements which match the selector. If no match is found, a zero element array is returned. For unique matches, the array contains one element. Thus, check the length of the array to test whether a selector matches.
 
 ```julia
 using Cascadia
@@ -19,14 +19,16 @@ using Gumbo
 n=parsehtml("<p id=\"foo\"><p id=\"bar\">")
 s=Selector("#foo")
 sm = sel"#foo"
-matchall(s, n.root)
+eachmatch(s, n.root)
 # 1-element Array{Gumbo.HTMLNode,1}:
 #  Gumbo.HTMLElement{:p}
 
-matchall(sm, n.root)
+eachmatch(sm, n.root)
 # 1-element Array{Gumbo.HTMLNode,1}:
 #  Gumbo.HTMLElement{:p}
 ```
+
+__Note:__ The top level matching function name has changed from `matchall` in `v0.6` to `eachmatch` in `v0.7` and higher to reflect the change in Julia base.
 
 ### Webscraping Example
 
@@ -40,14 +42,14 @@ using Requests
 r = get("http://stackoverflow.com/questions/tagged/julia-lang")
 h = parsehtml(convert(String, r.data))
 
-qs = matchall(Selector(".question-summary"),h.root)
+qs = eachmatch(Selector(".question-summary"),h.root)
 
 println("StackOverflow Julia Questions (votes  answered?  url)")
 
 for q in qs
-    votes = nodeText(matchall(Selector(".votes .vote-count-post "), q)[1])
-    answered = length(matchall(Selector(".status.answered"), q)) > 0
-    href = matchall(Selector(".question-hyperlink"), q)[1].attributes["href"]
+    votes = nodeText(eachmatch(Selector(".votes .vote-count-post "), q)[1])
+    answered = length(eachmatch(Selector(".status.answered"), q)) > 0
+    href = eachmatch(Selector(".question-hyperlink"), q)[1].attributes["href"]
     println("$votes  $answered  http://stackoverflow.com$href")
 end
 ```
