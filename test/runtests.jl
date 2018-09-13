@@ -1,5 +1,5 @@
 using Cascadia
-using Base.Test
+using Test
 using JSON
 using Gumbo
 
@@ -40,11 +40,11 @@ for (i, d) in enumerate(selectorTests)
     c = Selector(d["Selector"])
     @test typeof(c) == Selector
     n=parsehtml(d["HTML"])
-    r=matchall(c, n.root)
+    r=eachmatch(c, n.root)
     l=length(r)
     e = length(d["Results"])
     if l != e
-        cnt += 1
+        global cnt += 1
         println("Test Failure (known) for $(d["Selector"]) Expected $e, got $l")
     else
         println("Test Success         for $(d["Selector"])")

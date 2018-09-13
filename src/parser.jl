@@ -24,7 +24,7 @@ function parseEscape(p::Parser)
 	  while  i < p.i+6 && i <= length(p.s) && hexDigit(p.s[i])
 		  i += 1
 	  end
-	  v = parse(UInt, p.s[start:i], 16)
+	  v = parse(UInt, p.s[start:i], base=16)
 	  if length(p.s) >= i
 		  if  p.s[i] == '\r'
 			  i += 1
@@ -211,7 +211,7 @@ function skipWhitespace(p::Parser) #->boolean
 			continue
 		elseif p.s[i] == '/'
 			if startswith(p.s[p.i:end], "/*")
-				ends,endl = search(p.s, "*/", i+length("/*"))
+				ends,endl = something(findnext("*/", p.s, i+length("/*")), 0:-1)
 				if endl != -1
 					i = endl+1
 					continue

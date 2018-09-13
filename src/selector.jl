@@ -17,7 +17,7 @@ firstChild(n::HTMLDocument) = n.root
 function nextSibling(n::HTMLNode)
      p=n.parent
      l=length(p.children)
-     i=find(x->x===n, p.children)
+     i=findall(x->x===n, p.children)
      if isempty(i) || i[1]==l
          return nothing
      else
@@ -28,7 +28,7 @@ end
 function prevSibling(n::HTMLNode)
      p=n.parent
      l=length(p.children)
-     i=find(x->x===n, p.children)
+     i=findall(x->x===n, p.children)
      if isempty(i) || i[1]==1
          return nothing
      else
@@ -85,12 +85,18 @@ end
 # // MustCompile is like Compile, but panics instead of returning an error.
 
 
-#// MatchAll returns a slice of the nodes that match the selector,
+#// eachmatch returns a slice of the nodes that match the selector,
 #// from n and its children.
-function Base.matchall(s::Selector, n::HTMLNode ) #->HTMLNode[]
+function Base.eachmatch(s::Selector, n::HTMLNode ) #->HTMLNode[]
     return matchAllInto(s, n, HTMLNode[])
 end
 
+if VERSION >= v"0.7-" && VERSION < v"1.0-"
+function Base.matchall(s::Selector, n::HTMLNode )
+    Base.depwarn("use eachmatch instead of matchall", :matchall)
+    eachmatch(s, n)
+end
+end
 
 
 function matchAllInto(s::Selector, n::HTMLNode, storage::Array)
@@ -228,7 +234,7 @@ end
 #// the attribute named key contains val.
 function attributeSubstringSelector(key::AbstractString, val::AbstractString) #-> Selector
     return attributeSelector(key) do s
-        return contains(s, val)
+        return occursin(val, s)
     end
 end
 
@@ -238,7 +244,7 @@ end
 #// the attribute named key matches the regular expression rx
 function attributeRegexSelector(key::AbstractString, rx::Regex) #->Selector
     return attributeSelector(key) do s
-        return ismatch(rx, key)
+        return occursin(rx, key)
     end
 end
 
@@ -299,7 +305,7 @@ function nodeOwnText(n::HTMLNode) #->String
             write(b, c.text)
         end
     end
-    return takebuf_string(b)
+    return String(take!(copy(b)))
 end
 
 nodeOwnText(n::HTMLText) = ""
@@ -311,7 +317,7 @@ nodeOwnText(n::HTMLText) = ""
 function textSubstrSelector(val::AbstractString) #->Selector
     return Selector() do n::HTMLNode
         text = lowercase(nodeText(n))
-        return contains(text, val)
+        return occursin(val, text)
     end
 end
 
@@ -322,7 +328,7 @@ end
 function ownTextSubstrSelector(val::AbstractString) #->Selector
     return Selector() do n::HTMLNode
         text = lowercase(nodeOwnText(n))
-        return contains(text, val)
+        return occursin(val, text)
     end
 end
 
@@ -332,7 +338,7 @@ end
 #// the specified regular expression
 function textRegexSelector(rx::Regex) #->Selector
     return Selector() do n::HTMLNode
-        return ismatch(rx, nodeText(n))
+        return occursin(rx, nodeText(n))
     end
 end
 
@@ -342,7 +348,7 @@ end
 #// directly matches the specified regular expression
 function ownTextRegexSelector(rx::Regex) #->Selector
     return Selector() do n::HTMLNode
-        return ismatch(rx, nodeOwnText(n))
+        return occursin(rx, nodeOwnText(n))
     end
 end
 
