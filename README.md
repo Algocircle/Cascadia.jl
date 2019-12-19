@@ -35,11 +35,9 @@ __Note:__ The top level matching function name has changed from `matchall` in `v
 The primary use case for this library is to enable webscraping -- the automatic extraction of information from html pages. As an example, consider the following code, which returns a list of questions that have been tagged with `julia-lang` on StackOverflow.
 
 ```julia
-using Cascadia
-using Gumbo
-using Requests
+using Cascadia, Gumbo, HTTP
 
-r = get("http://stackoverflow.com/questions/tagged/julia-lang")
+r = HTTP.get("http://stackoverflow.com/questions/tagged/julia-lang")
 h = parsehtml(convert(String, r.data))
 
 qs = eachmatch(Selector(".question-summary"),h.root)
@@ -59,31 +57,15 @@ This code produces the following output:
 ```
 StackOverflow Julia Questions (votes  answered?  url)
 
-0  false  http://stackoverflow.com/questions/48067945/making-subset-of-julia-dataframe-with-values-greater-than-x
-1  true  http://stackoverflow.com/questions/48060390/initialize-fields-of-user-defined-types-in-arbitrary-order
-1  true  http://stackoverflow.com/questions/48059544/keyword-argument-aliases
-5  false  http://stackoverflow.com/questions/48055583/change-julia-promt-to-include-evalutation-numbers
-1  false  http://stackoverflow.com/questions/48053516/applying-replacement-rules-to-julia-expressions
-1  false  http://stackoverflow.com/questions/48045608/whats-wrong-with-my-euclidean-distance-calculation-julia
-0  false  http://stackoverflow.com/questions/48044567/loading-a-package-in-each-julia-lang-session-avoid-retyping-using-xxx-every-t
-2  false  http://stackoverflow.com/questions/48037732/how-to-save-julia-for-loop-returns-in-an-array-or-dataframe
-3  true  http://stackoverflow.com/questions/48036171/why-does-array-without-produce-so-much-memory-allocation
-1  true  http://stackoverflow.com/questions/48031603/julia-string-interpolation-of-array-element
-
+0  false  http://stackoverflow.com/questions/59361325/how-to-get-a-rolling-window-regression-in-julia
+0  true  http://stackoverflow.com/questions/59356818/how-i-translate-python-code-into-julia-code
+-2  false  http://stackoverflow.com/questions/59354720/how-to-fix-this-error-in-julia-throws-same-error-for-all-packages-not-found-i
+-1  true  http://stackoverflow.com/questions/59354407/julia-package-for-geocoding
+1  false  http://stackoverflow.com/questions/59350631/jupyter-lab-precompile-error-for-kernel-1-0-after-adding-kernel-1-3
+0  true  http://stackoverflow.com/questions/59348461/genie-framework-does-not-install-under-julia-1-2
 ...
-
-3  false  http://stackoverflow.com/questions/47840667/is-there-a-way-to-tell-which-kernel-a-jupyter-notebook-was-built-with
-0  false  http://stackoverflow.com/questions/47826378/can-julia-capture-the-results-shell-command
-0  false  http://stackoverflow.com/questions/47823695/julia-analog-to-ipython-not-a-notebook-e-g-ijulia
-1  false  http://stackoverflow.com/questions/47822388/julia-comprehension-can-one-index-reference-another
-1  false  http://stackoverflow.com/questions/47822190/display-interaction-with-julia-list-comprehension
-1  false  http://stackoverflow.com/questions/47819748/in-julia-how-do-i-run-an-external-program-and-process-its-output-line-by-line
-2  false  http://stackoverflow.com/questions/47818035/julia-three-dimensional-arrays-performance
-0  false  http://stackoverflow.com/questions/47800014/saving-settings-changes-in-vscode
-0  true  http://stackoverflow.com/questions/47784339/can-broadcast-be-applied-to-subarrays-slices-of-array-in-julia
-2  false  http://stackoverflow.com/questions/47762777/how-to-check-if-a-variable-is-scalar-in-julia
-1  false  http://stackoverflow.com/questions/47762625/tensorflow-jl-output-shape-of-dynamic-rnn
-
+2  true  http://stackoverflow.com/questions/59300202/julia-package-install-fail-with-please-specify-by-known-name-uuid
+2  false  http://stackoverflow.com/questions/59297379/how-do-i-transfer-my-packages-after-installing-a-new-julia-version
 ```
 
 Note that this returns the elements on the first page of the query results. Getting the values from subsequent pages is left as an exercise for the reader.
