@@ -38,7 +38,7 @@ The primary use case for this library is to enable webscraping -- the automatic 
 using Cascadia, Gumbo, HTTP
 
 r = HTTP.get("http://stackoverflow.com/questions/tagged/julia-lang")
-h = parsehtml(convert(String, r.data))
+h = parsehtml(String(r.body))
 
 qs = eachmatch(Selector(".question-summary"),h.root)
 
