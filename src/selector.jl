@@ -54,7 +54,13 @@ end
 #// found, or false if no match is found.
 function hasDescendantMatch(n::HTMLNode, a::Selector)
     for c in Gumbo.children(n)
-        if typeof(c) == HTMLText; return a(c); end
+        if typeof(c) == HTMLText
+            if a(c)
+                return true
+            else
+                continue
+            end
+        end
         for cc in PostOrderDFS(c)
             if a(cc); return true; end
         end
@@ -139,6 +145,7 @@ function typeSelector(tg) #->Selector
     tg=lowercase(tg)
     return Selector() do n::HTMLNode
         if !(typeof(n) <: HTMLElement); return false; end
+        #@info tg n string(tag(n))
         lowercase(string(tag(n))) == tg
     end
 end
@@ -244,7 +251,7 @@ end
 #// the attribute named key matches the regular expression rx
 function attributeRegexSelector(key::AbstractString, rx::Regex) #->Selector
     return attributeSelector(key) do s
-        return occursin(rx, key)
+        return occursin(rx, s)
     end
 end
 
@@ -384,14 +391,16 @@ function nthChildSelector(a::Int, b::Int, last::Bool, ofType::Bool) #->Selector
         if parent == NullNode; return false; end
         i=-1
         count=0
+        temp = nothing
         for c in Gumbo.children(parent)
-            if typeof(c) != HTMLElement || (ofType && tag(c) != tag(n))
+            if !(typeof(c) <: HTMLElement) || (ofType && tag(c) != tag(n))
                 continue
             end
             count += 1
             if c == n
                 i=count
-                if c !== children(parent)[end]
+                if c !== Gumbo.children(parent)[end]
+                    temp = c
                     break
                 end
             end
@@ -400,7 +409,7 @@ function nthChildSelector(a::Int, b::Int, last::Bool, ofType::Bool) #->Selector
             # This shouldn't happen, since n should always be one of its parent's children.
             return false
         end
-        if c===children(parent)[end]
+        if temp===Gumbo.children(parent)[end]
             i = count -i + 1
         end
 
@@ -419,12 +428,13 @@ end
 #// If ofType is true, it implements :only-of-type instead.
 function onlyChildSelector(ofType::Bool) #-> Selector
     return Selector() do n::HTMLNode
+        #@info n
         if !(typeof(n) <: HTMLElement); return false; end
         parent = n.parent
         if parent == nothing  || parent == NullNode; return false; end
         count = 0
         for c in Gumbo.children(parent)
-            if typeof(c) != HTMLElement || (oftype && tag(c) != tag(n))
+            if !(typeof(c) <: HTMLElement) || (ofType && tag(c) != tag(n))
                 continue
             end
             count += 1
