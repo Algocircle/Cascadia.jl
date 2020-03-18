@@ -437,23 +437,23 @@
     "HTML": "<ul>\n\t\t\t<li><a id=\"a1\" href=\"http://www.google.com/finance\"/>\n\t\t\t<li><a id=\"a2\" href=\"http://finance.yahoo.com/\"/>\n\t\t\t<li><a id=\"a2\" href=\"http://finance.untrusted.com/\"/>\n\t\t\t<li><a id=\"a3\" href=\"https://www.google.com/news\"/>\n\t\t\t<li><a id=\"a4\" href=\"http://news.yahoo.com\"/>\n\t\t</ul>",
     "Selector": "[href#=(fina)]:not([href#=(\\/\\/[^\\/]+untrusted)])",
     "Results": [
-      "<a id=\"a1\" href=\"http://www.google.com/finance\">",
-      "<a id=\"a2\" href=\"http://finance.yahoo.com/\">"
+      "<a href=\"http://www.google.com/finance\" id=\"a1\">",
+      "<a href=\"http://finance.yahoo.com/\" id=\"a2\">"
     ]
   },
   {
     "HTML": "<ul>\n\t\t\t<li><a id=\"a1\" href=\"http://www.google.com/finance\"/>\n\t\t\t<li><a id=\"a2\" href=\"http://finance.yahoo.com/\"/>\n\t\t\t<li><a id=\"a3\" href=\"https://www.google.com/news\"/>\n\t\t\t<li><a id=\"a4\" href=\"http://news.yahoo.com\"/>\n\t\t</ul>",
     "Selector": "[href#=(^https:\\/\\/[^\\/]*\\/?news)]",
     "Results": [
-      "<a id=\"a3\" href=\"https://www.google.com/news\">"
+      "<a href=\"https://www.google.com/news\" id=\"a3\">"
     ]
   },
   {
     "HTML": "<form>\n\t\t\t<label>Username <input type=\"text\" name=\"username\" /></label>\n\t\t\t<label>Password <input type=\"password\" name=\"password\" /></label>\n\t\t\t<label>Country\n\t\t\t\t<select name=\"country\">\n\t\t\t\t\t<option value=\"ca\">Canada</option>\n\t\t\t\t\t<option value=\"us\">United States</option>\n\t\t\t\t</select>\n\t\t\t</label>\n\t\t\t<label>Bio <textarea name=\"bio\"></textarea></label>\n\t\t\t<button>Sign up</button>\n\t\t</form>",
     "Selector": ":input",
     "Results": [
-      "<input type=\"text\" name=\"username\">",
-      "<input type=\"password\" name=\"password\">",
+      "<input name=\"username\" type=\"text\">",
+      "<input name=\"password\" type=\"password\">",
       "<select name=\"country\">",
       "<textarea name=\"bio\">",
       "<button>"
