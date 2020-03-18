@@ -399,8 +399,7 @@ function nthChildSelector(a::Int, b::Int, last::Bool, ofType::Bool) #->Selector
             count += 1
             if c == n
                 i=count
-                if c !== Gumbo.children(parent)[end]
-                    temp = c
+                if !last
                     break
                 end
             end
@@ -409,7 +408,7 @@ function nthChildSelector(a::Int, b::Int, last::Bool, ofType::Bool) #->Selector
             # This shouldn't happen, since n should always be one of its parent's children.
             return false
         end
-        if temp===Gumbo.children(parent)[end]
+        if last
             i = count -i + 1
         end
 
