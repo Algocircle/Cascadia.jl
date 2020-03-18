@@ -73,70 +73,72 @@ Note that this returns the elements on the first page of the query results. Gett
 
 ### Current Status
 
-Most selector types are supported, but a few are still not fully functional. Examples of selectors that currently work, and some that don't  yet, are listed below.
+This library should work with almost all CSS selectors. Please [raise an issue](https://github.com/Algocircle/Cascadia.jl/issues) if you find any that don't work. However, note that [CSS pseudo elements](https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-elements) are not yet supported. 
 
-| Selector | Status        |
-|---------------|----------|
-| `address` | Works         |
-| `*` | Works         |
-| `#foo` | Works         |
-| `li#t1` | Works         |
-| `*#t4` | Works         |
-| `.t1` | Works         |
-| `p.t1` | Works         |
-| `div.teST` | Works         |
-| `.t1.fail` | Works         |
-| `p.t1.t2` | Works         |
-| `p[title]` | Works         |
-| `address[title="foo"]` | Works         |
-| `[      title        ~=       foo    ]` | Works         |
-| `[title~="hello world"]` | Works         |
-| `[lang|="en"]` | Works         |
-| `[title^="foo"]` | Works         |
-| `[title$="bar"]` | Works         |
-| `[title*="bar"]` | Works         |
-| `.t1:not(.t2)` | Works         |
-| `div:not(.t1)` | Works         |
-| `li:nth-child(odd)` | Doesn't Work  |
-| `li:nth-child(even)` | Doesn't Work  |
-| `li:nth-child(-n+2) ` | Doesn't Work  |
-| `li:nth-child(3n+1)` | Doesn't Work  |
-| `li:nth-last-child(odd)` | Doesn't Work  |
-| `li:nth-last-child(even)` | Doesn't Work  |
-| `li:nth-last-child(-n+2)` | Doesn't Work  |
-| `li:nth-last-child(3n+1)` | Doesn't Work  |
-| `span:first-child` | Doesn't Work  |
-| `span:last-child` | Doesn't Work  |
-| `p:nth-of-type(2)` | Doesn't Work  |
-| `p:nth-last-of-type(2)` | Doesn't Work  |
-| `p:last-of-type` | Doesn't Work  |
-| `p:first-of-type` | Doesn't Work  |
-| `p:only-child` | Doesn't Work  |
-| `p:only-of-type` | Doesn't Work  |
-| `:empty` | Works         |
-| `div p` | Works         |
-| `div table p` | Works         |
-| `div > p` | Works         |
-| `p ~ p` | Works         |
-| `p + p` | Works         |
-| `li, p` | Works         |
-| `p +/*This is a comment*/ p` | Works         |
-| `p:contains("that wraps")` | Works         |
-| `p:containsOwn("that wraps")` | Works         |
-| `:containsOwn("inner")` | Works         |
-| `p:containsOwn("block")` | Works         |
-| `div:has(#p1)` | Works         |
-| `div:has(:containsOwn("2"))` | Works         |
-| `body :has(:containsOwn("2"))` | Doesn't Work  |
-| `body :haschild(:containsOwn("2"))` | Works         |
-| `p:matches([\d])` | Works         |
-| `p:matches([a-z])` | Works         |
-| `p:matches([a-zA-Z])` | Works         |
-| `p:matches([^\d])` | Works         |
-| `p:matches(^(0|a))` | Works         |
-| `p:matches(^\d+$)` | Works         |
-| `p:not(:matches(^\d+$))` | Works         |
-| `div :matchesOwn(^\d+$)` | Works         |
-| `[href#=(fina)]:not([href#=(\/\/[^\/]+untrusted)])` | Doesn't Work  |
-| `[href#=(^https:\/\/[^\/]*\/?news)]` | Doesn't Work  |
-| `:input` | Works |
+Specifically, the following selector types are tested, and known to work.
+
+| Selector |
+|---------------|
+| `address` |
+| `*` |
+| `#foo` |
+| `li#t1` |
+| `*#t4` |
+| `.t1` |
+| `p.t1` |
+| `div.teST` |
+| `.t1.fail` |
+| `p.t1.t2` |
+| `p[title]` |
+| `address[title="foo"]` |
+| `[title ~= foo]` |
+| `[title~="hello world"]` |
+| `[lang|="en"]` |
+| `[title^="foo"]` |
+| `[title$="bar"]` |
+| `[title*="bar"]` |
+| `.t1:not(.t2)` |
+| `div:not(.t1)` |
+| `li:nth-child(odd)` |
+| `li:nth-child(even)` |
+| `li:nth-child(-n+2)` |
+| `li:nth-child(3n+1)` |
+| `li:nth-last-child(odd)` |
+| `li:nth-last-child(even)` |
+| `li:nth-last-child(-n+2)` |
+| `li:nth-last-child(3n+1)` |
+| `span:first-child` |
+| `span:last-child` |
+| `p:nth-of-type(2)` |
+| `p:nth-last-of-type(2)` |
+| `p:last-of-type` |
+| `p:first-of-type` |
+| `p:only-child` |
+| `p:only-of-type` |
+| `:empty` |
+| `div p` |
+| `div table p` |
+| `div > p` |
+| `p ~ p` |
+| `p + p` |
+| `li, p` |
+| `p +/*This is a comment*/ p` |
+| `p:contains("that wraps")` |
+| `p:containsOwn("that wraps")` |
+| `:containsOwn("inner")` |
+| `p:containsOwn("block")` |
+| `div:has(#p1)` |
+| `div:has(:containsOwn("2"))` |
+| `body :has(:containsOwn("2"))` |
+| `body :haschild(:containsOwn("2"))` |
+| `p:matches([\d])` |
+| `p:matches([a-z])` |
+| `p:matches([a-zA-Z])` |
+| `p:matches([^\d])` |
+| `p:matches(^(0|a))` |
+| `p:matches(^\d+$)` |
+| `p:not(:matches(^\d+$))` |
+| `div :matchesOwn(^\d+$)` |
+| `[href#=(fina)]:not([href#=(\/\/[^\/]+untrusted)])` |
+| `[href#=(^https:\/\/[^\/]*\/?news)]` |
+| `:input` |
