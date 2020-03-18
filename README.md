@@ -93,7 +93,7 @@ Specifically, the following selector types are tested, and known to work.
 | `address[title="foo"]` |
 | `[title ~= foo]` |
 | `[title~="hello world"]` |
-| `[lang|="en"]` |
+| `[lang\|="en"]` |
 | `[title^="foo"]` |
 | `[title$="bar"]` |
 | `[title*="bar"]` |
@@ -135,7 +135,7 @@ Specifically, the following selector types are tested, and known to work.
 | `p:matches([a-z])` |
 | `p:matches([a-zA-Z])` |
 | `p:matches([^\d])` |
-| `p:matches(^(0|a))` |
+| `p:matches(^(0\|a))` |
 | `p:matches(^\d+$)` |
 | `p:not(:matches(^\d+$))` |
 | `div :matchesOwn(^\d+$)` |
