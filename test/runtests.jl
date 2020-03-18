@@ -3,12 +3,18 @@ using Test
 using JSON
 using Gumbo
 
-# write your own tests here
-@test 1 == 1
+function checkstring(elem::HTMLElement{T}) where {T}
+    opentag = "<$T"
+    for (name,value) in sort(collect(elem.attributes), by=x->x.first)
+        opentag *= " $name=\"$value\""
+    end
+    opentag *= ">"
+end
 
 #A function to simplify test artifact creation
 P(x) = Cascadia.Parser(x)
 
+@testset "Basic Tests" begin
 @test Cascadia.parseName(P("abc")) == "abc"
 @test Cascadia.parseName(P("x")) == "x"
 @test Cascadia.parseIdentifier(P("abc")) == "abc"
@@ -29,26 +35,24 @@ P(x) = Cascadia.Parser(x)
 @test Cascadia.parseString(P("'x\\\r\nx'")) == "xx"
 @test Cascadia.parseString(P("\"a\\\"b\"")) == "a\"b"
 
-Cascadia.parseInteger(P("90:")) == 90
+@test Cascadia.parseInteger(P("90:")) == 90
+
+end
 
 ###Selector tests. Load data from file.
 
 selectorTests=JSON.parsefile(joinpath(dirname(@__FILE__), "selectorTests.json"))
 
 cnt = 0
-for (i, d) in enumerate(selectorTests)
+@testset "Selector Test $(d["Selector"])" for d in selectorTests
     c = Selector(d["Selector"])
     @test typeof(c) == Selector
     n=parsehtml(d["HTML"])
     r=eachmatch(c, n.root)
-    l=length(r)
-    e = length(d["Results"])
-    if l != e
-        global cnt += 1
-        println("Test Failure (known) for $(d["Selector"]) Expected $e, got $l")
-    else
-        println("Test Success         for $(d["Selector"])")
+    e = d["Results"]
+    @test length(r) == length(e)
+
+    for i in 1:length(r)
+        @test lowercase(checkstring(r[i])) == e[i]
     end
 end
-@test cnt <= 19
-println("Total test failures: $cnt / $(length(selectorTests))")
