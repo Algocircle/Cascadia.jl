@@ -2,16 +2,25 @@
 language: julia
 os:
   - linux
+  - osx
+  - windows
 julia:
-  - 0.7
   - 1.0
+  - 1
   - nightly
-matrix:
+jobs:
   allow_failures:
   - julia: nightly
+  include:
+  - os: linux
+    julia: 1.0
+  - os: linux
+    julia: 1
+  - os: linux
+    julia: nightly
+  - os: osx
+    julia: 1
+  - os: windows
+    julia: 1
 notifications:
   email: false
-# uncomment the following lines to override the default test script
-#script:
-#  - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
-#  - julia -e 'Pkg.clone(pwd()); Pkg.build("Cascadia"); Pkg.test("Cascadia"; coverage=true)'
