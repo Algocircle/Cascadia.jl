@@ -1,6 +1,9 @@
 # Cascadia
 
 [![Build Status](https://travis-ci.org/Algocircle/Cascadia.jl.svg?branch=master)](https://travis-ci.org/Algocircle/Cascadia.jl)
+[![Latest Version](https://juliahub.com/docs/Cascadia/version.svg)](https://juliahub.com/ui/Packages/Cascadia/Pq6Fi/)
+[![Pkg Eval](https://juliahub.com/docs/Cascadia/pkgeval.svg)](https://juliahub.com/ui/Packages/Cascadia/Pq6Fi/)
+[![Dependents](https://juliahub.com/docs/Cascadia/deps.svg)](https://juliahub.com/ui/Packages/Cascadia/Pq6Fi/?t=2)
 
 ### A CSS Selector library in Julia.
 
