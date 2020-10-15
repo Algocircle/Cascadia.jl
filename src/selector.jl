@@ -517,23 +517,20 @@ end
 #// If adjacent is true, the sibling must be immediately before the element.
 function siblingSelector(s1::Selector, s2::Selector, adjacent::Bool) #-> Selector
     return Selector() do n::HTMLNode
-        if !s2(n); return false; end
+        s2(n) || return false #//make sure n matches s2
+        m = prevSibling(n)
         if adjacent
-            m = prevSibling(n)
-            while m!= nothing
-                if typeof(m) == HTMLText #|| typeof(m) == HTMLComment
-                    continue
-                end
-                return s1(m)
+            #//now find first non-text predecessor
+            while typeof(m) == HTMLText #|| typeof(m) == HTMLComment
                 m = prevSibling(m)
             end
-            return false
+            m !== nothing || return false
+            return s1(m)
         end
-        #// Walk backwards looking for element that matches s1
-        c = prevSibling(n)
-        while c!= nothing
-            if s1(c) ; return true; end
-            c=prevSibling(c)
+        #// otherwise keep walking backwards to find an element that matches s1
+        while m !== nothing
+            s1(m) && return true
+            m = prevSibling(m)
         end
         return false
     end
