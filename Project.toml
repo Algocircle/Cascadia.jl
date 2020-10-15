@@ -1,6 +1,6 @@
 name = "Cascadia"
 uuid = "54eefc05-d75b-58de-a785-1a3403f0919f"
-version = "1.0.0"
+version = "1.0.1"
 
 [deps]
 AbstractTrees = "1520ce14-60c1-5f80-bbc7-55ef81b5835c"
