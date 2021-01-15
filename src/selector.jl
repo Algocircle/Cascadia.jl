@@ -397,7 +397,7 @@ function nthChildSelector(a::Int, b::Int, last::Bool, ofType::Bool) #->Selector
                 continue
             end
             count += 1
-            if c == n
+            if c === n
                 i=count
                 if !last
                     break
