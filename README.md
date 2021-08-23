@@ -49,7 +49,7 @@ println("StackOverflow Julia Questions (votes  answered?  url)")
 
 for q in qs
     votes = nodeText(eachmatch(Selector(".votes .vote-count-post "), q)[1])
-    answered = length(eachmatch(Selector(".status.answered"), q)) > 0
+    answered = length(eachmatch(Selector(".status.answered"), q)) > 0 || length(eachmatch(Selector(".status.answered-accepted"), q)) > 0
     href = eachmatch(Selector(".question-hyperlink"), q)[1].attributes["href"]
     println("$votes  $answered  http://stackoverflow.com$href")
 end
