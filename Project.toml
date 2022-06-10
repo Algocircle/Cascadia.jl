@@ -7,7 +7,7 @@ AbstractTrees = "1520ce14-60c1-5f80-bbc7-55ef81b5835c"
 Gumbo = "708ec375-b3d6-5a57-a7ce-8257bf98657a"
 
 [compat]
-AbstractTrees = "0.2, 0.3"
+AbstractTrees = "0.2, 0.3, 0.4"
 Gumbo = "0.5, 0.7, 0.8"
 julia = "0.7, 1"
 
